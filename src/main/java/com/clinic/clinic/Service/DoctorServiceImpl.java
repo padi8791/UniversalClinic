@@ -3,10 +3,11 @@ package com.clinic.clinic.Service;
 import com.clinic.clinic.DAO.DoctorRepository;
 import com.clinic.clinic.Entity.Appointment;
 import com.clinic.clinic.Entity.Doctor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class DoctorServiceImpl implements DoctorService {
 
     private final DoctorRepository doctorRepository;

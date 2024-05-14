@@ -1,5 +1,6 @@
 package com.clinic.clinic.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,6 +25,10 @@ public class Doctor {
     @Column(name = "department")
     private String department;
 
+    @ManyToOne
+    @JsonBackReference
+    private User user;
+
     public Doctor() {
     }
 
@@ -33,6 +38,10 @@ public class Doctor {
         this.email = email;
         this.phone = phone;
         this.department = department;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getFirstName() {
@@ -73,5 +82,13 @@ public class Doctor {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

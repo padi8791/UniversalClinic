@@ -2,10 +2,12 @@ package com.clinic.clinic.Service;
 
 import com.clinic.clinic.DAO.UserRepository;
 import com.clinic.clinic.Entity.User;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
