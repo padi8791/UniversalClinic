@@ -88,7 +88,7 @@ public class UserController {
     }
 
     @PutMapping("/doctor/{doctorId}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long doctorId, @RequestBody Doctor updatedDoctor) {
+    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long doctorId, @ModelAttribute Doctor updatedDoctor) {
         Doctor doctor = doctorService.findById(doctorId);
         if (doctor == null) {
             return ResponseEntity.notFound().build();
