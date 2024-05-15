@@ -2,10 +2,12 @@ package com.clinic.clinic.Service;
 
 import com.clinic.clinic.DAO.PatientRepository;
 import com.clinic.clinic.Entity.Patient;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PatientServiceImpl implements PatientService{
 
     private final PatientRepository patientRepository;

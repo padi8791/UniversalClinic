@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Patient Details</title>
+</head>
+<body>
+<h1>Update Patient Details</h1>
+<form th:action="@{/patient/{patientId}/update(patientId=${patient.id})}" th:object="${patient}" method="post">
+    <input type="hidden" name="_method" value="put" />
+    <div>
+        <input type="text" th:field="*{firstName}" required="required"/>
+    </div>
+    <div>
+        <input type="text" th:field="*{lastName}" required="required"/>
+    </div>
+    <div>
+        <input type="email" th:field="*{email}" required="required"/>
+    </div>
+    <div>
+        <input type="text" th:field="*{phone}" required="required"/>
+    </div>
+    <div>
+        <input type="date" th:field="*{birthday}" required="required"/>
+    </div>
+    <button type="submit">Update Patient</button>
+</form>
+</body>
+</html>

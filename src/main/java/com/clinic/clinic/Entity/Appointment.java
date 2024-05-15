@@ -1,5 +1,6 @@
 package com.clinic.clinic.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -21,6 +22,10 @@ public class Appointment {
     @Column(name = "appointmentDate")
     private Date appointmentDate;
 
+    @ManyToOne
+    @JsonBackReference
+    private User user;
+
     public Appointment() {
 
     }
@@ -29,6 +34,18 @@ public class Appointment {
         this.patientId = patientId;
         this.doctorId = doctorId;
         this.appointmentDate = appointmentDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getPatientId() {

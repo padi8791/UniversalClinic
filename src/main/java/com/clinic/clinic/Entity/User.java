@@ -24,6 +24,15 @@ public class User {
     @JsonBackReference
     private List<Doctor> doctors = new ArrayList<>();
 
+
+    @OneToMany
+    @JsonBackReference
+    private List<Patient> patients = new ArrayList<>();
+
+    @OneToMany
+    @JsonBackReference
+    private List<Appointment> appointments = new ArrayList<>();
+
     public User(){
 
     }
@@ -66,6 +75,23 @@ public class User {
         this.doctors = doctors;
     }
 
+
+    public List<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(List<Patient> patients) {
+        this.patients = patients;
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
     // Utility method to add doctor
     public void addDoctor(Doctor doctor) {
         doctors.add(doctor);
@@ -76,5 +102,30 @@ public class User {
     public void removeDoctor(Doctor doctor) {
         doctors.remove(doctor);
         doctor.setUser(null);
+    }
+
+
+    // Utility method to add doctor
+    public void addPatient(Patient patient) {
+        patients.add(patient);
+        patient.setUser(this);
+    }
+
+    // Utility method to remove doctor
+    public void removePatient(Patient patient) {
+        patients.remove(patient);
+        patient.setUser(null);
+    }
+
+    // Utility method to add doctor
+    public void addAppointment(Appointment appointment) {
+        appointments.add(appointment);
+        appointment.setUser(this);
+    }
+
+    // Utility method to remove doctor
+    public void removeAppointment(Appointment appointment) {
+        appointments.remove(appointment);
+        appointment.setUser(null);
     }
 }

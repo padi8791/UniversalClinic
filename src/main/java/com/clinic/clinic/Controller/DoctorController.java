@@ -30,14 +30,14 @@ public class DoctorController {
         return "index";
     }
 
-    @GetMapping("/add-doctor")
+    @GetMapping("/add")
     public String showAddDoctorForm(Model model) {
         model.addAttribute("userId", '1');
         model.addAttribute("doctor", new Doctor());
         return "add-doctor-form";
     }
 
-    @PostMapping("/add-doctor")
+    @PostMapping("/add")
     public ResponseEntity<User> addDoctor(@ModelAttribute Doctor doctor) {
         User user = userService.findById(1L);
         if (user == null) {
@@ -68,7 +68,7 @@ public class DoctorController {
         return "update-doctor-form"; // Name of the Thymeleaf template
     }
 
-    @PutMapping("/update/{doctorId}")
+    @PutMapping("/{doctorId}/update")
     public ResponseEntity<Doctor> updateDoctor(@PathVariable Long doctorId, @ModelAttribute Doctor updatedDoctor) {
         Doctor doctor = doctorService.findById(doctorId);
         if (doctor == null) {
@@ -86,7 +86,7 @@ public class DoctorController {
         return ResponseEntity.ok(doctor);
     }
 
-    @DeleteMapping("/delete-doctor/{doctorId}")
+    @DeleteMapping("/{doctorId}/delete")
     public ResponseEntity<User> deleteDoctor(@PathVariable Long doctorId) {
         User user = userService.findById(1L);
         if (user == null) {
