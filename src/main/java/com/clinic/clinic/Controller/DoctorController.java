@@ -85,6 +85,14 @@ public class DoctorController {
         return ResponseEntity.ok(doctor);
     }
 
+    @GetMapping("/delete")
+    public String deleteDoctorForm(Model model) {
+        Doctor doctor = doctorService.findById(8L);
+        model.addAttribute("userId", '1');
+        model.addAttribute("doctor", doctor);
+        return "delete-doctor-form";
+    }
+
     @DeleteMapping("/{doctorId}/delete")
     public ResponseEntity<User> deleteDoctor(@PathVariable Long doctorId) {
         User user = userService.findById(1L);
