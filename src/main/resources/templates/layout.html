@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title th:layoutTitle="${title}">Default Title</title>
+</head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+
+<div layout:fragment="content">
+    <!-- Default content goes here -->
+    This is the default content.
+</div>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
