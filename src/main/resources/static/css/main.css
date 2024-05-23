@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Imperial+Script&family=Oswald:wght@200..700&family=Poetsen+One&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Imperial+Script&family=Poetsen+One&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Edu+TAS+Beginner:wght@400..700&family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&family=Imperial+Script&family=Oswald:wght@200..700&family=Poetsen+One&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 :root {
 
@@ -7,7 +8,7 @@
 
 body{
     margin: 0;
-    padding: 0;
+    padding: 70px 0 0 0;
     font-family: "Roboto", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -27,15 +28,27 @@ a{
 }
 
 .logo a{
+    font-family: "Oswald", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
     font-size: 24px;
     text-decoration: none;
-    font-family: "Oswald", sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;
+    font-weight: bolder;
     color: #2E37A4;
+    display: flex;
+    align-items: center;
+    span{
+        color: rgba(46, 55, 164, 0.5);
+    }
 }
 
+
 header{
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1039;
     width: calc(100% - 40px);
     height: 70px;
     background: #fff;
@@ -70,6 +83,18 @@ footer{
     min-height: calc(100vh - 160px);
 }
 
+.nav-btn{
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.nav-wrap{
+    display: flex;
+    width: 274px;
+    justify-content: space-between;
+}
+
 .left-nav{
     box-shadow: 5px 20px 14px rgba(46, 55, 164, 0.05);
     background: #fff;
@@ -79,6 +104,11 @@ footer{
     max-width: 250px;
     min-width: 225px;
     padding: 16px;
+    transition: all .3s ease-in-out;
+}
+
+.left-nav.closed{
+    margin-left: -282px;
 }
 
 .left-nav ul{
@@ -108,6 +138,12 @@ footer{
     padding: 8px;
     background: linear-gradient(0deg, rgba(51, 53, 72, 0.05), rgba(51, 53, 72, 0.05)), #FFFFFF;
     margin-right: 10px;
+    transition: all .2s ease-in-out;
+    filter: grayscale(100%);
+}
+
+.left-nav ul li a:hover img{
+    filter: grayscale(0);
 }
 
 .left-nav ul li a:hover, .left-nav ul li a:focus, .left-nav ul li a.active {
@@ -121,6 +157,7 @@ footer{
     padding: 20px;
     background: #fff;
     height: fit-content;
+    width: calc(100% - 40px);
 }
 
 .block-4-wrap{
@@ -179,7 +216,8 @@ footer{
 /*table*/
 
 .custom-table {
-    min-width: 900px; }
+    min-width: 100%;
+}
 .custom-table thead tr, .custom-table thead th {
     height: 60px;
     border-bottom: 1px solid #f0f0f0;
@@ -332,6 +370,7 @@ input {
     text-align: left;
 
 }
+
 
 
 

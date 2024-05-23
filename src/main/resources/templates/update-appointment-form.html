@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Update Appointment Details</h1>
-<form th:action="@{/appointment/{appointmentId}/update(appointmentId=${appointment.id})}" th:object="${appointment}" method="post">
+<form th:action="@{/appointments/{appointmentId}/update(appointmentId=${appointment.id})}" th:object="${appointment}" method="post">
     <input type="hidden" name="_method" value="put" />
     <input type="text" th:field="*{doctorId}" placeholder="Doctor" required="required"/>
     <input type="text" th:field="*{patientId}" placeholder="Patient" required="required"/>

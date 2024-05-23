@@ -16,7 +16,7 @@
                         <input type="text" placeholder="search">
                     </div>
                 </div>
-                <a href="/patient/add" class="btn btn-add">Add patient +</a>
+                <a href="/patients/add" class="btn btn-add">Add patient +</a>
             </div>
             <div id="doctors">
                 <div class="table-responsive custom-table-responsive">
@@ -36,7 +36,7 @@
                             <td><span th:text="${patient.firstName}">FirstName</span> <span th:text="${patient.lastName}">LastName</span></td>
                             <td><span th:text="${patient.phone}">Contact</span></td>
                             <td><span th:text="${patient.email}">Email</span></td>
-                            <td><a th:href="@{/patient/{id}/update(id=${patient.id})}">Edit</a></td>
+                            <td><a th:href="@{/patients/{id}/update(id=${patient.id})}">Edit</a></td>
                         </tr>
                         </tbody>
                         <tbody  th:if="${patientsPage == null || patientsPage.isEmpty()}">
@@ -47,9 +47,9 @@
                     </table>
                 </div>
                 <div class="pagination">
-                    <a th:if="${!patientsPage.isFirst()}" th:href="@{/patient/all(page=${currentPage - 1})}">&laquo; Previous</a>
+                    <a th:if="${!patientsPage.isFirst()}" th:href="@{/patients/all(page=${currentPage - 1})}">&laquo; Previous</a>
                     <span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${patientsPage.totalPages}">Page 1 of 1</span>
-                    <a th:if="${!patientsPage.isLast()}" th:href="@{/patient/all(page=${currentPage + 1})}">Next &raquo;</a>
+                    <a th:if="${!patientsPage.isLast()}" th:href="@{/patients/all(page=${currentPage + 1})}">Next &raquo;</a>
                 </div>
             </div>
         </div>

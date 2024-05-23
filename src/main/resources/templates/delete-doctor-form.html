@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Delete Doctor by id</h1>
-<form th:action="@{/doctor/{doctorId}/delete(doctorId=${doctor.id})}" th:object="${doctor}" method="post">
+<form th:action="@{/doctors/{doctorId}/delete(doctorId=${doctor.id})}" th:object="${doctor}" method="post">
     <!-- Ensuring that the method override is correctly used for DELETE operation -->
     <input type="hidden" name="_method" value="DELETE" />
 

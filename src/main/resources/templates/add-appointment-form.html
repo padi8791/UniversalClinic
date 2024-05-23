@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Add Appointment to User</h1>
-<form th:action="@{/appointment/add(userId=${userId})}" th:object="${appointment}" method="post">
+<form th:action="@{/appointments/add(userId=${userId})}" th:object="${appointment}" method="post">
     <input type="text" th:field="*{doctorId}" placeholder="Doctor" required="required"/>
     <input type="text" th:field="*{patientId}" placeholder="Patient" required="required"/>
     <input type="date" th:field="*{appointmentDate}" required="required"/>

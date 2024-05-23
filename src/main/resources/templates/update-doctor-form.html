@@ -10,7 +10,7 @@
             <div>
                 <h3>Update Doctor</h3>
             </div>
-            <form class="form-grid" th:action="@{/doctor/{doctorId}/update(doctorId=${doctor.id})}" th:object="${doctor}" method="post">
+            <form class="form-grid" th:action="@{/doctors/{doctorId}/update(doctorId=${doctor.id})}" th:object="${doctor}" method="post">
                 <input type="hidden" name="_method" value="put" />
                 <div class="from-row">
                 <div class="input-block local-forms">

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/doctor")
+@RequestMapping("/doctors")
 public class DoctorController {
 
     private final DoctorService doctorService;
@@ -27,7 +27,7 @@ public class DoctorController {
 
     @GetMapping
     public String index(Model model){
-        return "redirect:/doctor/all";
+        return "redirect:/doctors/all";
     }
 
     @GetMapping("/add")
@@ -46,7 +46,7 @@ public class DoctorController {
         doctorService.save(doctor);
         user.addDoctor(doctor);
         userService.save(user);
-        return "redirect:/doctor";
+        return "redirect:/doctors";
     }
 
 //    @GetMapping("/all")
@@ -101,7 +101,7 @@ public class DoctorController {
         // Save the updated doctor back to the database
         doctorService.save(doctor);
         // Return the updated doctor
-        return "redirect:/doctor";
+        return "redirect:/doctors";
     }
 
     @GetMapping("/delete")

@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/patient")
+@RequestMapping("/patients")
 public class PatientController {
 
     private final PatientService patientService;
@@ -40,7 +40,7 @@ public class PatientController {
 
     @GetMapping
     public String index(Model model){
-        return "redirect:/patient/all";
+        return "redirect:/patients/all";
     }
 
     @GetMapping("/add")
@@ -59,7 +59,7 @@ public class PatientController {
         patientService.save(patient);
         user.addPatient(patient);
         userService.save(user);
-        return "redirect:/patient/all";
+        return "redirect:/patients/all";
     }
 
 //    @GetMapping("/all")
@@ -112,7 +112,7 @@ public class PatientController {
         patient.setPhone(updatedPatient.getPhone());
         patient.setBirthday(updatedPatient.getBirthday());
         patientService.save(patient);
-        return "redirect:/patient/all";
+        return "redirect:/patients/all";
     }
 
     @DeleteMapping("/{patientId}/delete")

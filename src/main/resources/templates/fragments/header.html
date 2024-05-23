@@ -7,14 +7,19 @@
 <body>
 <header th:fragment="header">
 
-    <div class="logo">
-        <a href="/">
-            UniClinic
-        </a>
+    <div class="nav-wrap">
+        <div class="logo">
+            <a href="/">
+                <img th:src="@{/img/logo.svg}" width="30" height="30">
+                Uni <span>Clinic</span>
+            </a>
+        </div>
+        <button class="nav-btn nav-btn-js">
+            <img th:src="@{/img/nav-icon.svg}" width="30" height="30">
+        </button>
     </div>
-
     <div>
-       <a href="#"> LOGOUT </a>
+       <a href="#"> <img th:src="@{/img/logout.svg}" width="30" height="30"> </a>
     </div>
 </header>
 </body>

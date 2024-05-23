@@ -5,7 +5,7 @@
     <title>Footer</title>
 </head>
 <body>
-<div th:fragment="left-nav" class="left-nav">
+<div th:fragment="left-nav" class="left-nav left-nav-js">
     <ul>
         <li>
             <a href="/">
@@ -14,21 +14,33 @@
             </a>
         </li>
         <li>
-            <a href="/doctor">
+            <a href="/doctors">
                 <img th:src="@{/img/doctor.svg}" width="30" height="30">
                 Doctors
             </a>
         </li>
         <li>
-            <a href="/patient">
+            <a href="/patients">
                 <img th:src="@{/img/patients.svg}" width="30" height="30">
                 Patients
             </a>
         </li>
         <li>
-            <a href="/appointment">
-                <img th:src="@{/img/calendar.svg}" width="30" height="30">
+            <a href="/departments">
+                <img th:src="@{/img/departments.svg}" width="30" height="30">
+                Departments
+            </a>
+        </li>
+        <li>
+            <a href="/appointments">
+                <img th:src="@{/img/appointment.svg}" width="30" height="30">
                 Appointments
+            </a>
+        </li>
+        <li>
+            <a href="/calendar">
+                <img th:src="@{/img/calendar.svg}" width="30" height="30">
+                Calendar
             </a>
         </li>
     </ul>
