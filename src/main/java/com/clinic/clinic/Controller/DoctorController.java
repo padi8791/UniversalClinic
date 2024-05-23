@@ -5,6 +5,7 @@ import com.clinic.clinic.Entity.User;
 import com.clinic.clinic.Service.DoctorService;
 import com.clinic.clinic.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,7 @@ public class DoctorController {
 
     @GetMapping
     public String index(Model model){
-        return "index";
+        return "redirect:/doctor/all";
     }
 
     @GetMapping("/add")
@@ -37,27 +38,45 @@ public class DoctorController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<User> addDoctor(@ModelAttribute Doctor doctor) {
+    public String addDoctor(@ModelAttribute Doctor doctor) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/login";
         }
         doctorService.save(doctor);
         user.addDoctor(doctor);
         userService.save(user);
-        return ResponseEntity.ok(user);
+        return "redirect:/doctor";
     }
 
-    @GetMapping("/doctors")
-    public ResponseEntity<List<Doctor>> getAllDoctorsByUser() {
+//    @GetMapping("/all")
+//    public String getAllDoctorsByUser(Model model) {
+//        User user = userService.findById(1L);
+//        if (user == null) {
+//            return "redirect:/login";
+//        }
+//
+//        List<Doctor> doctors = user.getDoctors();
+//        model.addAttribute("doctors", doctors);
+//
+//        return "doctors";
+//    }
+
+    @GetMapping("/all")
+    public String getAllDoctorsByUser(Model model, @RequestParam(defaultValue = "0") int page) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/login";
         }
-        return ResponseEntity.ok(user.getDoctors());
+
+        Page<Doctor> doctorPage = doctorService.getAllPaginated(page, 5);
+        model.addAttribute("doctorPage", doctorPage);
+        model.addAttribute("currentPage", page);
+
+        return "doctors";
     }
 
-    @GetMapping("/{doctorId}/edit")
+    @GetMapping("/{doctorId}/update")
     public String showUpdateDoctorForm(@PathVariable Long doctorId, Model model) {
         Doctor doctor = doctorService.findById(doctorId);
         if (doctor == null) {
@@ -68,10 +87,10 @@ public class DoctorController {
     }
 
     @PutMapping("/{doctorId}/update")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long doctorId, @ModelAttribute Doctor updatedDoctor) {
+    public String updateDoctor(@PathVariable Long doctorId, @ModelAttribute Doctor updatedDoctor) {
         Doctor doctor = doctorService.findById(doctorId);
         if (doctor == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
         // Update doctor details
         doctor.setFirstName(updatedDoctor.getFirstName());
@@ -82,7 +101,7 @@ public class DoctorController {
         // Save the updated doctor back to the database
         doctorService.save(doctor);
         // Return the updated doctor
-        return ResponseEntity.ok(doctor);
+        return "redirect:/doctor";
     }
 
     @GetMapping("/delete")

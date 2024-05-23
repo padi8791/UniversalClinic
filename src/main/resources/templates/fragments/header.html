@@ -6,14 +6,16 @@
 </head>
 <body>
 <header th:fragment="header">
-    <h1>Welcome to My Website</h1>
-    <nav>
-        <ul>
-            <li><a th:href="@{/static}">Home</a></li>
-            <li><a th:href="@{/about}">About</a></li>
-            <li><a th:href="@{/contact}">Contact</a></li>
-        </ul>
-    </nav>
+
+    <div class="logo">
+        <a href="/">
+            UniClinic
+        </a>
+    </div>
+
+    <div>
+       <a href="#"> LOGOUT </a>
+    </div>
 </header>
 </body>
 </html>

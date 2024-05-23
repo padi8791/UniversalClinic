@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Footer</title>
+</head>
+<body>
+<div th:fragment="left-nav" class="left-nav">
+    <ul>
+        <li>
+            <a href="/">
+                <img th:src="@{/img/dashboard.svg}" width="30" height="30">
+                Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="/doctor">
+                <img th:src="@{/img/doctor.svg}" width="30" height="30">
+                Doctors
+            </a>
+        </li>
+        <li>
+            <a href="/patient">
+                <img th:src="@{/img/patients.svg}" width="30" height="30">
+                Patients
+            </a>
+        </li>
+        <li>
+            <a href="/appointment">
+                <img th:src="@{/img/calendar.svg}" width="30" height="30">
+                Appointments
+            </a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

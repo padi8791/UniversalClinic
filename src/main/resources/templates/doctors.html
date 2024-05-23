@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+<div layout:fragment="content" class="wrapper">
+
+    <div class="row dashboard-block-full">
+        <div class="col">
+            <div class="header-block">
+                <div class="header-block__search">
+                    <h3>Doctors List</h3>
+                    <div class="input-block local-forms">
+                        <input type="text" placeholder="search">
+                    </div>
+                </div>
+                <a href="/doctor/add" class="btn btn-add">Add doctor +</a>
+            </div>
+            <div id="doctors">
+                <div class="table-responsive custom-table-responsive">
+                    <table class="table custom-table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Full Name</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody th:if="${doctorPage != null}">
+                        <tr th:each="doctor, iterStat : ${doctorPage.content}">
+                            <th scope="row" th:text="${iterStat.index + 1 + currentPage * 5}">1</th>
+                            <td><span th:text="${doctor.firstName}">FirstName</span> <span th:text="${doctor.lastName}">LastName</span></td>
+                            <td><span th:text="${doctor.phone}">Contact</span></td>
+                            <td><span th:text="${doctor.email}">Email</span></td>
+                            <td><a th:href="@{/doctor/{id}/update(id=${doctor.id})}">Edit</a></td>
+                        </tr>
+                        </tbody>
+                        <tbody th:if="${doctorPage == null || doctorPage.isEmpty()}">
+                        <tr>
+                            <td colspan="6">No doctors found.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <a th:if="${!doctorPage.isFirst()}" th:href="@{/doctor/all(page=${currentPage - 1})}">&laquo; Previous</a>
+                    <span th:text="'Page ' + ${currentPage + 1} + ' of ' + ${doctorPage.totalPages}">Page 1 of 1</span>
+                    <a th:if="${!doctorPage.isLast()}" th:href="@{/doctor/all(page=${currentPage + 1})}">Next &raquo;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

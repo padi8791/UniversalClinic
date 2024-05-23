@@ -7,6 +7,7 @@ import com.clinic.clinic.Service.PatientService;
 import com.clinic.clinic.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +40,7 @@ public class PatientController {
 
     @GetMapping
     public String index(Model model){
-        return "index";
+        return "redirect:/patient/all";
     }
 
     @GetMapping("/add")
@@ -50,27 +51,45 @@ public class PatientController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<User> addDoctor(@ModelAttribute Patient patient) {
+    public String addPatient(@ModelAttribute Patient patient) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
         patientService.save(patient);
         user.addPatient(patient);
         userService.save(user);
-        return ResponseEntity.ok(user);
+        return "redirect:/patient/all";
     }
 
-    @GetMapping("/patients")
-    public ResponseEntity<List<Patient>> getAllPatientsByUser() {
+//    @GetMapping("/all")
+//    public String getAllPatientsByUser(Model model) {
+//        User user = userService.findById(1L);
+//        if (user == null) {
+//            return "redirect:/login";
+//        }
+//
+//        List<Patient> patients = user.getPatients();
+//        model.addAttribute("patients", patients);
+//        return "patients";
+//    }
+
+
+    @GetMapping("/all")
+    public String getAllPatientsByUser(Model model, @RequestParam(defaultValue = "0") int page) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/login";
         }
-        return ResponseEntity.ok(user.getPatients());
+
+        Page<Patient> patientsPage = patientService.getAllPaginated(page, 5);
+        model.addAttribute("patientsPage", patientsPage);
+        model.addAttribute("currentPage", page);
+
+        return "patients";
     }
 
-    @GetMapping("/{patientId}/edit")
+    @GetMapping("/{patientId}/update")
     public String showUpdatePatientForm(@PathVariable Long patientId, Model model) {
         Patient patient = patientService.findById(patientId);
         if (patient == null) {
@@ -81,10 +100,10 @@ public class PatientController {
     }
 
     @PutMapping("/{patientId}/update")
-    public ResponseEntity<Patient> updatePatient(@PathVariable Long patientId, @ModelAttribute Patient updatedPatient) {
+    public String updatePatient(@PathVariable Long patientId, @ModelAttribute Patient updatedPatient) {
         Patient patient = patientService.findById(patientId);
         if (patient == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
 
         patient.setFirstName(updatedPatient.getFirstName());
@@ -93,7 +112,7 @@ public class PatientController {
         patient.setPhone(updatedPatient.getPhone());
         patient.setBirthday(updatedPatient.getBirthday());
         patientService.save(patient);
-        return ResponseEntity.ok(patient);
+        return "redirect:/patient/all";
     }
 
     @DeleteMapping("/{patientId}/delete")
