@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title th:layoutTitle="${title}">Default Title</title>
+    <title th:text="${title}">Default Title</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<footer th:replace="~{fragments/footer :: footer}"></footer>
+<!--<footer th:replace="~{fragments/footer :: footer}"></footer>-->
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
 </body>
 </html>

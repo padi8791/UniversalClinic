@@ -1,7 +1,11 @@
 package com.clinic.clinic.Service;
 
+import com.clinic.clinic.DAO.AppointmentPaginatedRepo;
 import com.clinic.clinic.DAO.AppointmentRepository;
 import com.clinic.clinic.Entity.Appointment;
+import com.clinic.clinic.Entity.Doctor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +16,11 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     private final AppointmentRepository appointmentRepository;
 
-    public AppointmentServiceImpl(AppointmentRepository appointmentRepository) {
+    private final AppointmentPaginatedRepo aAppointmentPaginatedRepo;
+
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentPaginatedRepo aAppointmentPaginatedRepo) {
         this.appointmentRepository = appointmentRepository;
+        this.aAppointmentPaginatedRepo = aAppointmentPaginatedRepo;
     }
 
     @Override
@@ -35,5 +42,10 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public void deleteById(Long id) {
         appointmentRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Appointment> getAllPaginated(int page, int size) {
+        return aAppointmentPaginatedRepo.findAll(PageRequest.of(page, size));
     }
 }

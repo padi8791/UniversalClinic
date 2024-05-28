@@ -3,7 +3,7 @@ package com.clinic.clinic.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "appointments")
@@ -13,14 +13,18 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "patientId")
-    private Long patientId;
 
-    @Column(name = "doctorId")
-    private Long doctorId;
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
+
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
     @Column(name = "appointmentDate")
-    private Date appointmentDate;
+    private LocalDateTime appointmentDate;
 
     @ManyToOne
     @JsonBackReference
@@ -30,9 +34,9 @@ public class Appointment {
 
     }
 
-    public Appointment(Long patientId, Long doctorId, Date appointmentDate) {
-        this.patientId = patientId;
-        this.doctorId = doctorId;
+    public Appointment(Patient patient, Doctor doctor, LocalDateTime appointmentDate) {
+        this.patient = patient;
+        this.doctor = doctor;
         this.appointmentDate = appointmentDate;
     }
 
@@ -48,27 +52,27 @@ public class Appointment {
         this.user = user;
     }
 
-    public Long getPatientId() {
-        return patientId;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
-    public Long getDoctorId() {
-        return doctorId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
-    public Date getAppointmentDate() {
+    public LocalDateTime getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(Date appointmentDate) {
+    public void setAppointmentDate(LocalDateTime appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
 }

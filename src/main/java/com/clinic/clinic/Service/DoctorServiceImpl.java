@@ -46,4 +46,9 @@ public class DoctorServiceImpl implements DoctorService {
     public Page<Doctor> getAllPaginated(int page, int size) {
         return doctorPaginatedRepo.findAll(PageRequest.of(page, size));
     }
+
+    @Override
+    public List<Doctor> findByLastName(String lastName) {
+        return doctorRepository.findByLastName(lastName);
+    }
 }

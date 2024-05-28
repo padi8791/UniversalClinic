@@ -2,7 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
 </head>
 <body>
 <div layout:fragment="content" class="wrapper">
@@ -12,8 +11,9 @@
             <div class="header-block">
                 <div class="header-block__search">
                     <h3>Doctors List</h3>
-                    <div class="input-block local-forms">
-                        <input type="text" placeholder="search">
+                    <div class="input-block local-forms search-wrap">
+                        <input type="text" placeholder="search" class="search-by-js" data-type="doctors">
+                        <div class="search-results search-results-js"></div>
                     </div>
                 </div>
                 <a href="/doctors/add" class="btn btn-add">Add doctor +</a>

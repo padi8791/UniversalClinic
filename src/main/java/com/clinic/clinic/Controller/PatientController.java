@@ -47,6 +47,7 @@ public class PatientController {
     public String showAddDoctorForm(Model model) {
         model.addAttribute("userId", '1');
         model.addAttribute("patient", new Patient());
+        model.addAttribute("title", "Add Patient");
         return "add-patient-form";
     }
 
@@ -62,18 +63,6 @@ public class PatientController {
         return "redirect:/patients/all";
     }
 
-//    @GetMapping("/all")
-//    public String getAllPatientsByUser(Model model) {
-//        User user = userService.findById(1L);
-//        if (user == null) {
-//            return "redirect:/login";
-//        }
-//
-//        List<Patient> patients = user.getPatients();
-//        model.addAttribute("patients", patients);
-//        return "patients";
-//    }
-
 
     @GetMapping("/all")
     public String getAllPatientsByUser(Model model, @RequestParam(defaultValue = "0") int page) {
@@ -85,7 +74,7 @@ public class PatientController {
         Page<Patient> patientsPage = patientService.getAllPaginated(page, 5);
         model.addAttribute("patientsPage", patientsPage);
         model.addAttribute("currentPage", page);
-
+        model.addAttribute("title", "Patients");
         return "patients";
     }
 
@@ -96,6 +85,7 @@ public class PatientController {
             return "redirect:/error"; // Redirect to an error page or another appropriate action
         }
         model.addAttribute("patient", patient);
+        model.addAttribute("title", "Update Patient");
         return "update-patient-form"; // Name of the Thymeleaf template
     }
 
@@ -132,4 +122,12 @@ public class PatientController {
     }
 
 
+    @GetMapping("/by-lastname/{lastName}")
+    public ResponseEntity<List<Patient>> getPatientByLastName(@PathVariable String lastName) {
+        List<Patient> doctors = patientService.findByLastName(lastName);
+        if (doctors.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(doctors);
+    }
 }

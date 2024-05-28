@@ -13,4 +13,6 @@ public interface PatientService {
     void deleteById(Long id);
 
     Page<Patient> getAllPaginated(int page, int i);
+
+    List<Patient> findByLastName(String lastName);
 }

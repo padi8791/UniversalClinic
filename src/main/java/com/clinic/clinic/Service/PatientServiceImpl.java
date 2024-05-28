@@ -49,4 +49,9 @@ public class PatientServiceImpl implements PatientService{
     public Page<Patient> getAllPaginated(int page, int size) {
         return patientPaginatedRepo.findAll(PageRequest.of(page, size));
     }
+
+    @Override
+    public List<Patient> findByLastName(String lastName) {
+        return patientRepository.findByLastName(lastName);
+    }
 }

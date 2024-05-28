@@ -34,6 +34,7 @@ public class DoctorController {
     public String showAddDoctorForm(Model model) {
         model.addAttribute("userId", '1');
         model.addAttribute("doctor", new Doctor());
+        model.addAttribute("title", "Add Doctor");
         return "add-doctor-form";
     }
 
@@ -49,19 +50,6 @@ public class DoctorController {
         return "redirect:/doctors";
     }
 
-//    @GetMapping("/all")
-//    public String getAllDoctorsByUser(Model model) {
-//        User user = userService.findById(1L);
-//        if (user == null) {
-//            return "redirect:/login";
-//        }
-//
-//        List<Doctor> doctors = user.getDoctors();
-//        model.addAttribute("doctors", doctors);
-//
-//        return "doctors";
-//    }
-
     @GetMapping("/all")
     public String getAllDoctorsByUser(Model model, @RequestParam(defaultValue = "0") int page) {
         User user = userService.findById(1L);
@@ -72,7 +60,7 @@ public class DoctorController {
         Page<Doctor> doctorPage = doctorService.getAllPaginated(page, 5);
         model.addAttribute("doctorPage", doctorPage);
         model.addAttribute("currentPage", page);
-
+        model.addAttribute("title", "Doctors");
         return "doctors";
     }
 
@@ -83,6 +71,7 @@ public class DoctorController {
             return "redirect:/error"; // Redirect to an error page or another appropriate action
         }
         model.addAttribute("doctor", doctor);
+        model.addAttribute("title", "Update Doctor");
         return "update-doctor-form"; // Name of the Thymeleaf template
     }
 
@@ -128,5 +117,12 @@ public class DoctorController {
         return ResponseEntity.ok(user);  // Return an OK response
     }
 
-
+    @GetMapping("/by-lastname/{lastName}")
+    public ResponseEntity<List<Doctor>> getDoctorsByLastName(@PathVariable String lastName) {
+        List<Doctor> doctors = doctorService.findByLastName(lastName);
+        if (doctors.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(doctors);
+    }
 }

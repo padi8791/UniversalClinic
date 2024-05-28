@@ -2,11 +2,15 @@ package com.clinic.clinic.Controller;
 
 import com.clinic.clinic.Entity.Appointment;
 import com.clinic.clinic.Entity.Doctor;
+import com.clinic.clinic.Entity.Patient;
 import com.clinic.clinic.Entity.User;
 import com.clinic.clinic.Service.AppointmentService;
+import com.clinic.clinic.Service.DoctorService;
+import com.clinic.clinic.Service.PatientService;
 import com.clinic.clinic.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,78 +27,99 @@ import java.util.List;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+    private final DoctorService doctorService;
+
+    private final PatientService patientService;
     private final UserService userService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
     }
 
     @Autowired
-    public AppointmentController(AppointmentService appointmentService, UserService userService) {
+    public AppointmentController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService, UserService userService) {
+        this.doctorService = doctorService;
+        this.patientService = patientService;
         this.userService = userService;
         this.appointmentService = appointmentService;
     }
 
     @GetMapping
     public String index(Model model){
-        return "index";
+        return "redirect:/appointments/all";
     }
 
     @GetMapping("/add")
     public String showAddDoctorForm(Model model) {
+
         model.addAttribute("userId", '1');
-        model.addAttribute("appointment", new Appointment());
+        model.addAttribute("title", "Add Appointment");
         return "add-appointment-form";
     }
 
+
     @PostMapping("/add")
-    public ResponseEntity<User> addAppointment(@ModelAttribute Appointment appointment) {
+    public String addAppointment(@RequestParam Long doctorId, @RequestParam Long patientId, @RequestParam LocalDateTime datetime) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
+        Doctor doctor = doctorService.findById(doctorId);
+        Patient patient = patientService.findById(patientId);
+
+        Appointment appointment = new Appointment();
+        appointment.setUser(user);
+        appointment.setDoctor(doctor);
+        appointment.setPatient(patient);
+        appointment.setAppointmentDate(datetime);
+
         appointmentService.save(appointment);
-        user.addAppointment(appointment);
-        userService.save(user);
-        return ResponseEntity.ok(user);
+        return "redirect:/appointments";
     }
 
-    @GetMapping("/appointments")
-    public ResponseEntity<List<Appointment>> getAllAppointmentsByUser() {
+    @GetMapping("/all")
+    public String getAllAppointmentsByUser(Model model, @RequestParam(defaultValue = "0") int page) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
-        return ResponseEntity.ok(user.getAppointments());
+
+        Page<Appointment> appointmentsPage = appointmentService.getAllPaginated(page, 5);
+        model.addAttribute("appointmentsPage", appointmentsPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("title", "Appointments");
+        return "appointments";
     }
 
-    @GetMapping("/{appointmentId}/edit")
+    @GetMapping("/{appointmentId}/update")
     public String showUpdateDoctorForm(@PathVariable Long appointmentId, Model model) {
         Appointment appointment = appointmentService.findById(appointmentId);
         if (appointment == null) {
-            return "redirect:/error"; // Redirect to an error page or another appropriate action
+            return "redirect:/error";
         }
         model.addAttribute("appointment", appointment);
+        model.addAttribute("title", "Update Appointment");
         return "update-appointment-form"; // Name of the Thymeleaf template
     }
 
     @PutMapping("/{appointmentId}/update")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long appointmentId, @ModelAttribute Appointment updatedAppointment) {
+    public String updateAppointment(@PathVariable Long appointmentId, @RequestParam Long doctorId, @RequestParam Long patientId, @RequestParam LocalDateTime datetime) {
         Appointment appointment = appointmentService.findById(appointmentId);
         if (appointment == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
-        // Update doctor details
-        appointment.setDoctorId(updatedAppointment.getDoctorId());
-        appointment.setPatientId(updatedAppointment.getPatientId());
-        appointment.setAppointmentDate(updatedAppointment.getAppointmentDate());
-        // Save the updated doctor back to the database
+        Doctor doctor = doctorService.findById(doctorId);
+        Patient patient = patientService.findById(patientId);
+
+        appointment.setDoctor(doctor);
+        appointment.setPatient(patient);
+        appointment.setAppointmentDate(datetime);
+
         appointmentService.save(appointment);
-        // Return the updated doctor
-        return ResponseEntity.ok(appointment);
+        return "redirect:/appointments/all";
     }
 
     @DeleteMapping("/{appointmentId}/delete")
