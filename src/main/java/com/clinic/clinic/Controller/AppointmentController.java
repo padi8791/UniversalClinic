@@ -62,7 +62,7 @@ public class AppointmentController {
 
 
     @PostMapping("/add")
-    public String addAppointment(@RequestParam Long doctorId, @RequestParam Long patientId, @RequestParam LocalDateTime datetime) {
+    public String addAppointment(@RequestParam String title, @RequestParam Long doctorId, @RequestParam Long patientId, @RequestParam LocalDateTime datetime) {
         User user = userService.findById(1L);
         if (user == null) {
             return "redirect:/error";
@@ -72,6 +72,7 @@ public class AppointmentController {
 
         Appointment appointment = new Appointment();
         appointment.setUser(user);
+        appointment.setTitle(title);
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setAppointmentDate(datetime);
@@ -105,8 +106,18 @@ public class AppointmentController {
         return "update-appointment-form"; // Name of the Thymeleaf template
     }
 
+    @GetMapping("/{appointmentId}")
+    public String getAppointment(Model model, @PathVariable Long appointmentId) {
+        Appointment appointment = appointmentService.findById(appointmentId);
+        if (appointment == null) {
+            return "redirect:/error";
+        }
+        model.addAttribute("appointment", appointment);
+        return "appointment";
+    }
+
     @PutMapping("/{appointmentId}/update")
-    public String updateAppointment(@PathVariable Long appointmentId, @RequestParam Long doctorId, @RequestParam Long patientId, @RequestParam LocalDateTime datetime) {
+    public String updateAppointment(@RequestParam String title, @PathVariable Long appointmentId, @RequestParam Long doctorId, @RequestParam Long patientId, @RequestParam LocalDateTime datetime) {
         Appointment appointment = appointmentService.findById(appointmentId);
         if (appointment == null) {
             return "redirect:/error";
@@ -117,24 +128,25 @@ public class AppointmentController {
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setAppointmentDate(datetime);
+        appointment.setTitle(title);
 
         appointmentService.save(appointment);
         return "redirect:/appointments/all";
     }
 
     @DeleteMapping("/{appointmentId}/delete")
-    public ResponseEntity<User> deleteAppointment(@PathVariable Long appointmentId) {
+    public String deleteAppointment(@PathVariable Long appointmentId) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
         Appointment appointment = appointmentService.findById(appointmentId);
         if (appointment == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
         user.removeAppointment(appointment);  // Remove the  from the user's list
         appointmentService.deleteById(appointmentId);  // Delete the  from the database
         userService.save(user);  // Update the user in the database
-        return ResponseEntity.ok(user);  // Return an OK response
+        return "redirect:/appointments";
     }
 }

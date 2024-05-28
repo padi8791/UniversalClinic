@@ -4,6 +4,7 @@ import com.clinic.clinic.DAO.AppointmentPaginatedRepo;
 import com.clinic.clinic.DAO.AppointmentRepository;
 import com.clinic.clinic.Entity.Appointment;
 import com.clinic.clinic.Entity.Doctor;
+import com.clinic.clinic.Entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,10 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public Page<Appointment> getAllPaginated(int page, int size) {
         return aAppointmentPaginatedRepo.findAll(PageRequest.of(page, size));
+    }
+
+    @Override
+    public List<Appointment> findByUser(User user) {
+        return appointmentRepository.findByUser(user);
     }
 }

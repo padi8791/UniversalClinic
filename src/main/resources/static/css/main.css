@@ -359,6 +359,15 @@ input {
     margin-bottom: 30px;
 }
 
+.local-forms.input-block{
+    p{
+        font-weight: bolder;
+        span{
+            font-weight: lighter;
+        }
+    }
+}
+
 .local-forms label {
     font-size: 12px;
     color: #333448;
@@ -453,4 +462,28 @@ input {
 
 .left-nav ul li.active{
     background: #2e37a412;
+}
+
+.delete-btn{
+    background: red!important;
+}
+.pagination{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+    font-weight: bolder;
+}
+.pagination span {
+    margin: 0 15px;
+}
+.pagination a{
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #9c9c9c;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
 }

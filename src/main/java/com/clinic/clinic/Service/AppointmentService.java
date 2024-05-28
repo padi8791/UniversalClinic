@@ -2,6 +2,7 @@ package com.clinic.clinic.Service;
 
 import com.clinic.clinic.Entity.Appointment;
 import com.clinic.clinic.Entity.Patient;
+import com.clinic.clinic.Entity.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface AppointmentService {
     void deleteById(Long id);
 
     Page<Appointment> getAllPaginated(int page, int i);
+
+    List<Appointment> findByUser(User user);
 }
