@@ -106,19 +106,19 @@ public class PatientController {
     }
 
     @DeleteMapping("/{patientId}/delete")
-    public ResponseEntity<User> deletePatient(@PathVariable Long patientId) {
+    public String deletePatient(@PathVariable Long patientId) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
         Patient patient = patientService.findById(patientId);
         if (patient == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
         user.removePatient(patient);  // Remove the doctor from the user's list
         patientService.deleteById(patientId);  // Delete the doctor from the database
         userService.save(user);  // Update the user in the database
-        return ResponseEntity.ok(user);  // Return an OK response
+        return "redirect:/patients";
     }
 
 

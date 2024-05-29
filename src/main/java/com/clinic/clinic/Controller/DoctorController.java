@@ -1,7 +1,10 @@
 package com.clinic.clinic.Controller;
 
+import com.clinic.clinic.Entity.Appointment;
 import com.clinic.clinic.Entity.Doctor;
+import com.clinic.clinic.Entity.Patient;
 import com.clinic.clinic.Entity.User;
+import com.clinic.clinic.Service.AppointmentService;
 import com.clinic.clinic.Service.DoctorService;
 import com.clinic.clinic.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,13 @@ public class DoctorController {
 
     private final DoctorService doctorService;
     private final UserService userService;
+
+    private final AppointmentService appointmentService;
     @Autowired
-    public DoctorController(DoctorService doctorService, UserService userService) {
+    public DoctorController(DoctorService doctorService, UserService userService, AppointmentService appointmentService) {
         this.doctorService = doctorService;
         this.userService = userService;
+        this.appointmentService = appointmentService;
     }
 
     @GetMapping
@@ -93,29 +99,22 @@ public class DoctorController {
         return "redirect:/doctors";
     }
 
-    @GetMapping("/delete")
-    public String deleteDoctorForm(Model model) {
-        Doctor doctor = doctorService.findById(8L);
-        model.addAttribute("userId", '1');
-        model.addAttribute("doctor", doctor);
-        return "delete-doctor-form";
-    }
-
     @DeleteMapping("/{doctorId}/delete")
-    public ResponseEntity<User> deleteDoctor(@PathVariable Long doctorId) {
+    public String deleteDoctor(@PathVariable Long doctorId) {
         User user = userService.findById(1L);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return "redirect:/error";
         }
         Doctor doctor = doctorService.findById(doctorId);
-        if (doctor == null || !user.getDoctors().contains(doctor)) {
-            return ResponseEntity.notFound().build();
+        if (doctor == null) {
+            return "redirect:/error";
         }
         user.removeDoctor(doctor);  // Remove the doctor from the user's list
         doctorService.deleteById(doctorId);  // Delete the doctor from the database
         userService.save(user);  // Update the user in the database
-        return ResponseEntity.ok(user);  // Return an OK response
+        return "redirect:/doctors";
     }
+
 
     @GetMapping("/by-lastname/{lastName}")
     public ResponseEntity<List<Doctor>> getDoctorsByLastName(@PathVariable String lastName) {

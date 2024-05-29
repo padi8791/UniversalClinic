@@ -54,4 +54,9 @@ public class AppointmentServiceImpl implements AppointmentService{
     public List<Appointment> findByUser(User user) {
         return appointmentRepository.findByUser(user);
     }
+
+    @Override
+    public List<Appointment> findByDoctorId(Long doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId);
+    };
 }

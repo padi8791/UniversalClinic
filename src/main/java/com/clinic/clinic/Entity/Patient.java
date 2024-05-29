@@ -3,7 +3,9 @@ package com.clinic.clinic.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "patients")
@@ -30,6 +32,10 @@ public class Patient {
     @ManyToOne
     @JsonBackReference
     private User user;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Appointment> appointments = new ArrayList<>();
+
 
     public Patient(){
     }
@@ -95,5 +101,13 @@ public class Patient {
     }
 
     public void add(Patient patient) {
+    }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
     }
 }

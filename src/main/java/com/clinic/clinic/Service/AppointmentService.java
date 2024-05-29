@@ -16,4 +16,6 @@ public interface AppointmentService {
     Page<Appointment> getAllPaginated(int page, int i);
 
     List<Appointment> findByUser(User user);
+
+    List<Appointment> findByDoctorId(Long doctorId);
 }
