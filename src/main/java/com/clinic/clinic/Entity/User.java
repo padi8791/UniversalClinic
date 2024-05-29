@@ -33,6 +33,10 @@ public class User {
     @JsonBackReference
     private List<Appointment> appointments = new ArrayList<>();
 
+    @OneToMany
+    @JsonBackReference
+    private List<Department> departments = new ArrayList<>();
+
     public User(){
 
     }
@@ -127,5 +131,14 @@ public class User {
     public void removeAppointment(Appointment appointment) {
         appointments.remove(appointment);
         appointment.setUser(null);
+    }
+    public void addDepartment(Department department) {
+        departments.add(department);
+
+    }
+
+    public void removeADepartment(Department department) {
+        departments.remove(department);
+
     }
 }
