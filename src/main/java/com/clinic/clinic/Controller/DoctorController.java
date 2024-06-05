@@ -1,5 +1,6 @@
 package com.clinic.clinic.Controller;
 
+import com.clinic.clinic.AuthUtils;
 import com.clinic.clinic.Entity.Appointment;
 import com.clinic.clinic.Entity.Doctor;
 import com.clinic.clinic.Entity.Patient;
@@ -23,6 +24,10 @@ public class DoctorController {
     private final DoctorService doctorService;
     private final UserService userService;
 
+    @Autowired
+    private AuthUtils authUtils;
+
+
     private final AppointmentService appointmentService;
     @Autowired
     public DoctorController(DoctorService doctorService, UserService userService, AppointmentService appointmentService) {
@@ -38,7 +43,12 @@ public class DoctorController {
 
     @GetMapping("/add")
     public String showAddDoctorForm(Model model) {
-        model.addAttribute("userId", '1');
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("userId", userAuthed.getId());
         model.addAttribute("doctor", new Doctor());
         model.addAttribute("title", "Add Doctor");
         return "add-doctor-form";
@@ -46,24 +56,27 @@ public class DoctorController {
 
     @PostMapping("/add")
     public String addDoctor(@ModelAttribute Doctor doctor) {
-        User user = userService.findById(1L);
-        if (user == null) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
             return "redirect:/login";
         }
         doctorService.save(doctor);
-        user.addDoctor(doctor);
-        userService.save(user);
+        userAuthed.addDoctor(doctor);
+        userService.save(userAuthed);
         return "redirect:/doctors";
     }
 
     @GetMapping("/all")
     public String getAllDoctorsByUser(Model model, @RequestParam(defaultValue = "0") int page) {
-        User user = userService.findById(1L);
-        if (user == null) {
+
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
             return "redirect:/login";
         }
 
         Page<Doctor> doctorPage = doctorService.getAllPaginated(page, 5);
+
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("doctorPage", doctorPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("title", "Doctors");
@@ -72,6 +85,11 @@ public class DoctorController {
 
     @GetMapping("/{doctorId}/update")
     public String showUpdateDoctorForm(@PathVariable Long doctorId, Model model) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
+
         Doctor doctor = doctorService.findById(doctorId);
         if (doctor == null) {
             return "redirect:/error"; // Redirect to an error page or another appropriate action
@@ -83,6 +101,11 @@ public class DoctorController {
 
     @PutMapping("/{doctorId}/update")
     public String updateDoctor(@PathVariable Long doctorId, @ModelAttribute Doctor updatedDoctor) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
+
         Doctor doctor = doctorService.findById(doctorId);
         if (doctor == null) {
             return "redirect:/error";
@@ -101,23 +124,28 @@ public class DoctorController {
 
     @DeleteMapping("/{doctorId}/delete")
     public String deleteDoctor(@PathVariable Long doctorId) {
-        User user = userService.findById(1L);
-        if (user == null) {
-            return "redirect:/error";
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
         }
+
         Doctor doctor = doctorService.findById(doctorId);
         if (doctor == null) {
             return "redirect:/error";
         }
-        user.removeDoctor(doctor);  // Remove the doctor from the user's list
+        userAuthed.removeDoctor(doctor);  // Remove the doctor from the user's list
         doctorService.deleteById(doctorId);  // Delete the doctor from the database
-        userService.save(user);  // Update the user in the database
+        userService.save(userAuthed);  // Update the user in the database
         return "redirect:/doctors";
     }
 
 
     @GetMapping("/by-lastname/{lastName}")
     public ResponseEntity<List<Doctor>> getDoctorsByLastName(@PathVariable String lastName) {
+        User userAuthed = authUtils.getLoggedInUser();
+
+
+
         List<Doctor> doctors = doctorService.findByLastName(lastName);
         if (doctors.isEmpty()) {
             return ResponseEntity.noContent().build();

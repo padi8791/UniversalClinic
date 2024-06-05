@@ -28,25 +28,8 @@ public class UserController {
 
     @GetMapping("/new")
     public ResponseEntity<User> createUser() {
-        User newUser = new User("Name", "Email", "0000");
+        User newUser = new User("Name", "0000");
         userService.save(newUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
-
-//    @GetMapping("/{userId}/add-doctor-to-user")
-//    public ResponseEntity<User> addDoctorToUser(@PathVariable Long userId) {
-//        User user = userService.findById(userId);
-//        if (user == null) {
-//            return ResponseEntity.notFound().build(); // Properly handle the case where the user doesn't exist
-//        }
-//
-//        Doctor doctor = new Doctor("FirstName", "LastName", "Email", "Phone", "Department");
-//        doctorService.save(doctor);
-//        user.addDoctor(doctor);
-//        userService.save(user); // Assume userService.save() handles cascading or appropriate saving
-//
-//        return ResponseEntity.ok(user); // Return the updated user with the new doctor added
-//    }
-
-
 }

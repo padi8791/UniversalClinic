@@ -493,3 +493,9 @@ input {
     max-height: 80vh;
     width: 100%;
 }
+
+.user-info{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

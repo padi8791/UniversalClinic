@@ -13,10 +13,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "email")
-    private String email;
+    @Column(name = "username")
+    private String username;
     @Column(name = "password")
     private String password;
 
@@ -38,29 +36,27 @@ public class User {
     private List<Department> departments = new ArrayList<>();
 
     public User(){
-
     }
 
-    public User(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
+    public User(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public Long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -141,4 +137,5 @@ public class User {
         departments.remove(department);
 
     }
+
 }
