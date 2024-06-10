@@ -7,6 +7,7 @@ import com.clinic.clinic.Entity.Doctor;
 import com.clinic.clinic.Entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -59,4 +60,10 @@ public class AppointmentServiceImpl implements AppointmentService{
     public List<Appointment> findByDoctorId(Long doctorId) {
         return appointmentRepository.findByDoctorId(doctorId);
     };
+
+    @Override
+    public Page<Appointment> getAppointmentByUserPaginated(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return aAppointmentPaginatedRepo.findByUser(user, pageable);
+    }
 }

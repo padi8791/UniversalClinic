@@ -17,6 +17,7 @@ public class Department {
     @JsonBackReference
     private User user;
 
+
     public Department() {
 
     }

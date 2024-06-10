@@ -1,5 +1,6 @@
 package com.clinic.clinic.Controller;
 
+import com.clinic.clinic.AuthUtils;
 import com.clinic.clinic.Entity.Doctor;
 import com.clinic.clinic.Entity.Patient;
 import com.clinic.clinic.Entity.User;
@@ -24,6 +25,9 @@ public class PatientController {
 
     private final PatientService patientService;
     private final UserService userService;
+
+    @Autowired
+    private AuthUtils authUtils;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -53,25 +57,25 @@ public class PatientController {
 
     @PostMapping("/add")
     public String addPatient(@ModelAttribute Patient patient) {
-        User user = userService.findById(1L);
-        if (user == null) {
-            return "redirect:/error";
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
         }
         patientService.save(patient);
-        user.addPatient(patient);
-        userService.save(user);
+        userAuthed.addPatient(patient);
+        userService.save(userAuthed);
         return "redirect:/patients/all";
     }
 
 
     @GetMapping("/all")
     public String getAllPatientsByUser(Model model, @RequestParam(defaultValue = "0") int page) {
-        User user = userService.findById(1L);
-        if (user == null) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
             return "redirect:/login";
         }
 
-        Page<Patient> patientsPage = patientService.getAllPaginated(page, 5);
+        Page<Patient> patientsPage = patientService.getPatientByUserPaginated(userAuthed, page, 5);
         model.addAttribute("patientsPage", patientsPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("title", "Patients");
@@ -107,17 +111,17 @@ public class PatientController {
 
     @DeleteMapping("/{patientId}/delete")
     public String deletePatient(@PathVariable Long patientId) {
-        User user = userService.findById(1L);
-        if (user == null) {
-            return "redirect:/error";
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
         }
         Patient patient = patientService.findById(patientId);
         if (patient == null) {
             return "redirect:/error";
         }
-        user.removePatient(patient);  // Remove the doctor from the user's list
+        userAuthed.removePatient(patient);  // Remove the doctor from the user's list
         patientService.deleteById(patientId);  // Delete the doctor from the database
-        userService.save(user);  // Update the user in the database
+        userService.save(userAuthed);  // Update the user in the database
         return "redirect:/patients";
     }
 

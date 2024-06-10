@@ -5,8 +5,10 @@ import com.clinic.clinic.DAO.PatientPaginatedRepo;
 import com.clinic.clinic.DAO.PatientRepository;
 import com.clinic.clinic.Entity.Doctor;
 import com.clinic.clinic.Entity.Patient;
+import com.clinic.clinic.Entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,5 +55,11 @@ public class PatientServiceImpl implements PatientService{
     @Override
     public List<Patient> findByLastName(String lastName) {
         return patientRepository.findByLastName(lastName);
+    }
+
+    @Override
+    public Page<Patient> getPatientByUserPaginated(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return  patientPaginatedRepo.findByUser(user, pageable);
     }
 }

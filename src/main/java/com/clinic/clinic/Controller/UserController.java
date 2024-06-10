@@ -26,10 +26,10 @@ public class UserController {
         this.doctorService = doctorService;
     }
 
-    @GetMapping("/new")
-    public ResponseEntity<User> createUser() {
-        User newUser = new User("Name", "0000");
-        userService.save(newUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-    }
+//    @GetMapping("/new")
+//    public ResponseEntity<User> createUser() {
+//        User newUser = new User("Name", "0000");
+//        userService.save(newUser);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+//    }
 }

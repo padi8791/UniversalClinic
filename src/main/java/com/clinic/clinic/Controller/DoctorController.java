@@ -74,7 +74,7 @@ public class DoctorController {
             return "redirect:/login";
         }
 
-        Page<Doctor> doctorPage = doctorService.getAllPaginated(page, 5);
+        Page<Doctor> doctorPage = doctorService.getDoctorsByUserPaginated(userAuthed, page, 5);
 
         model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("doctorPage", doctorPage);
@@ -133,6 +133,7 @@ public class DoctorController {
         if (doctor == null) {
             return "redirect:/error";
         }
+
         userAuthed.removeDoctor(doctor);  // Remove the doctor from the user's list
         doctorService.deleteById(doctorId);  // Delete the doctor from the database
         userService.save(userAuthed);  // Update the user in the database
@@ -140,11 +141,11 @@ public class DoctorController {
     }
 
 
+
+    //to do !!!
     @GetMapping("/by-lastname/{lastName}")
     public ResponseEntity<List<Doctor>> getDoctorsByLastName(@PathVariable String lastName) {
         User userAuthed = authUtils.getLoggedInUser();
-
-
 
         List<Doctor> doctors = doctorService.findByLastName(lastName);
         if (doctors.isEmpty()) {

@@ -1,9 +1,7 @@
 package com.clinic.clinic.Controller;
 
-import com.clinic.clinic.Entity.Appointment;
-import com.clinic.clinic.Entity.Doctor;
-import com.clinic.clinic.Entity.Patient;
-import com.clinic.clinic.Entity.User;
+import com.clinic.clinic.AuthUtils;
+import com.clinic.clinic.Entity.*;
 import com.clinic.clinic.Service.AppointmentService;
 import com.clinic.clinic.Service.DoctorService;
 import com.clinic.clinic.Service.PatientService;
@@ -31,6 +29,9 @@ public class AppointmentController {
 
     private final PatientService patientService;
     private final UserService userService;
+
+    @Autowired
+    private AuthUtils authUtils;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -63,15 +64,15 @@ public class AppointmentController {
 
     @PostMapping("/add")
     public String addAppointment(@RequestParam String title, @RequestParam Long doctorId, @RequestParam Long patientId, @RequestParam LocalDateTime datetime) {
-        User user = userService.findById(1L);
-        if (user == null) {
-            return "redirect:/error";
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
         }
         Doctor doctor = doctorService.findById(doctorId);
         Patient patient = patientService.findById(patientId);
 
         Appointment appointment = new Appointment();
-        appointment.setUser(user);
+        appointment.setUser(userAuthed);
         appointment.setTitle(title);
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
@@ -83,12 +84,12 @@ public class AppointmentController {
 
     @GetMapping("/all")
     public String getAllAppointmentsByUser(Model model, @RequestParam(defaultValue = "0") int page) {
-        User user = userService.findById(1L);
-        if (user == null) {
-            return "redirect:/error";
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
         }
 
-        Page<Appointment> appointmentsPage = appointmentService.getAllPaginated(page, 5);
+        Page<Appointment> appointmentsPage = appointmentService.getAppointmentByUserPaginated(userAuthed, page, 5);
         model.addAttribute("appointmentsPage", appointmentsPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("title", "Appointments");
@@ -97,6 +98,10 @@ public class AppointmentController {
 
     @GetMapping("/{appointmentId}/update")
     public String showUpdateDoctorForm(@PathVariable Long appointmentId, Model model) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
         Appointment appointment = appointmentService.findById(appointmentId);
         if (appointment == null) {
             return "redirect:/error";
@@ -108,6 +113,10 @@ public class AppointmentController {
 
     @GetMapping("/{appointmentId}")
     public String getAppointment(Model model, @PathVariable Long appointmentId) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
         Appointment appointment = appointmentService.findById(appointmentId);
         if (appointment == null) {
             return "redirect:/error";
@@ -118,6 +127,10 @@ public class AppointmentController {
 
     @PutMapping("/{appointmentId}/update")
     public String updateAppointment(@RequestParam String title, @PathVariable Long appointmentId, @RequestParam Long doctorId, @RequestParam Long patientId, @RequestParam LocalDateTime datetime) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
         Appointment appointment = appointmentService.findById(appointmentId);
         if (appointment == null) {
             return "redirect:/error";
@@ -136,17 +149,17 @@ public class AppointmentController {
 
     @DeleteMapping("/{appointmentId}/delete")
     public String deleteAppointment(@PathVariable Long appointmentId) {
-        User user = userService.findById(1L);
-        if (user == null) {
-            return "redirect:/error";
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
         }
         Appointment appointment = appointmentService.findById(appointmentId);
         if (appointment == null) {
             return "redirect:/error";
         }
-        user.removeAppointment(appointment);  // Remove the  from the user's list
+        userAuthed.removeAppointment(appointment);  // Remove the  from the user's list
         appointmentService.deleteById(appointmentId);  // Delete the  from the database
-        userService.save(user);  // Update the user in the database
+        userService.save(userAuthed);  // Update the user in the database
         return "redirect:/appointments";
     }
 }

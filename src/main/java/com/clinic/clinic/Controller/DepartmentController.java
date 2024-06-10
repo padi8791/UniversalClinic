@@ -1,5 +1,6 @@
 package com.clinic.clinic.Controller;
 
+import com.clinic.clinic.AuthUtils;
 import com.clinic.clinic.Entity.*;
 import com.clinic.clinic.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class DepartmentController {
     private final UserService userService;
 
     @Autowired
+    private AuthUtils authUtils;
+
+    @Autowired
     public DepartmentController(DepartmentService departmentService, DoctorService doctorService, UserService userService) {
         this.departmentService = departmentService;
         this.doctorService = doctorService;
@@ -36,30 +40,36 @@ public class DepartmentController {
 
     @GetMapping("/add")
     public String getAddDepartmentForm(Model model) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
         Department department = new Department();
         model.addAttribute("department", department);
-        model.addAttribute("userId", '1');
         model.addAttribute("title", "Add Department");
         return "add-department-form";
     }
 
     @PostMapping("/add")
     public String addDepartment(@ModelAttribute Department department) {
-        User user = userService.findById(1L);
-        if (user == null) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
             return "redirect:/login";
         }
+        department.setUser(userAuthed);
         departmentService.save(department);
-        user.addDepartment(department);
-        userService.save(user);
+        userAuthed.addDepartment(department);
+        userService.save(userAuthed);
         return "redirect:/departments";
     }
 
     @GetMapping("/all")
     public String getAllDepartments(Model model, @RequestParam(defaultValue = "0") int page) {
-
-
-        Page<Department> departmentsPage = departmentService.getAllPaginated(page, 5);
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
+        Page<Department> departmentsPage = departmentService.getDepartmentByUserPaginated(userAuthed, page, 5);
         model.addAttribute("departmentsPage", departmentsPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("title", "Departments");
@@ -68,6 +78,10 @@ public class DepartmentController {
 
     @GetMapping("/{departmentId}/update")
     public String showUpdateDepartmentForm(@PathVariable Long departmentId, Model model) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
         Department department = departmentService.findById(departmentId);
         if (department == null) {
             return "redirect:/error";
@@ -79,6 +93,10 @@ public class DepartmentController {
 
     @GetMapping("/{departmentId}")
     public String getAppointment(Model model, @PathVariable Long departmentId) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
         Department department = departmentService.findById(departmentId);
         if (department == null) {
             return "redirect:/error";
@@ -88,23 +106,26 @@ public class DepartmentController {
     }
 
     @PutMapping("/{departmentId}/update")
-    public String updateDepartment(@RequestParam String departmentName, @PathVariable Long departmentId) {
+    public String updateDepartment(@PathVariable Long departmentId, @ModelAttribute Department updatedDepartment) {
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
+        }
+
         Department department = departmentService.findById(departmentId);
         if (department == null) {
             return "redirect:/error";
         }
-        department.setDepartmentName(departmentName);
-
+        department.setDepartmentName(updatedDepartment.getDepartmentName());
         departmentService.save(department);
         return "redirect:/departments/all";
     }
 
     @DeleteMapping("/{departmentId}/delete")
     public String deleteDepartment(@PathVariable Long departmentId) {
-
-        User user = userService.findById(1L);
-        if (user == null) {
-            return "redirect:/error";
+        User userAuthed = authUtils.getLoggedInUser();
+        if (userAuthed == null) {
+            return "redirect:/login";
         }
 
         Department department = departmentService.findById(departmentId);
@@ -112,9 +133,9 @@ public class DepartmentController {
             return "redirect:/error";
         }
 
-        user.removeDepartment(department);  // Remove the doctor from the user's list
+        userAuthed.removeDepartment(department);  // Remove the doctor from the user's list
         departmentService.deleteById(departmentId);  // Delete the doctor from the database
-        userService.save(user);  // Update the user in the database
+        userService.save(userAuthed);  // Update the user in the database
 
         return "redirect:/departments";
     }

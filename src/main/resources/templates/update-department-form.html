@@ -10,7 +10,8 @@
             <div>
                 <h3>Add Department</h3>
             </div>
-            <form class="form-grid" th:action="@{/departments/add}" th:object="${department}" method="post">
+            <form class="form-grid" th:action="@{/departments/{departmentId}/update(departmentId=${department.id})}" th:object="${department}" method="post">
+                <input type="hidden" name="_method" value="put" />
                 <div class="from-row">
                     <div class="input-block local-forms search-wrap">
                         <label>Name of department</label>

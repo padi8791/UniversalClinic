@@ -8,6 +8,7 @@ import com.clinic.clinic.Entity.Department;
 import com.clinic.clinic.Entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,5 +57,11 @@ public class DepartmentServiceImpl implements DepartmentService{
     @Override
     public List<Department> findByUser(User user) {
         return departmentRepository.findByName(String.valueOf(user));
+    }
+
+    @Override
+    public Page<Department> getDepartmentByUserPaginated(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return departmentPaginatedRepo.findByUser(user, pageable);
     }
 }

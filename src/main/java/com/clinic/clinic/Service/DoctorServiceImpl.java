@@ -4,8 +4,10 @@ import com.clinic.clinic.DAO.DoctorPaginatedRepo;
 import com.clinic.clinic.DAO.DoctorRepository;
 import com.clinic.clinic.Entity.Appointment;
 import com.clinic.clinic.Entity.Doctor;
+import com.clinic.clinic.Entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,5 +52,11 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<Doctor> findByLastName(String lastName) {
         return doctorRepository.findByLastName(lastName);
+    }
+
+    @Override
+    public Page<Doctor> getDoctorsByUserPaginated(User user, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return doctorPaginatedRepo.findByUser(user, pageable);
     }
 }
