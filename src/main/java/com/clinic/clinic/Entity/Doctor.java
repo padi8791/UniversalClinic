@@ -31,8 +31,8 @@ public class Doctor {
     private String email;
 
     @Column(name = "phone")
-    @Min(value=0, message = "must be greater than or equal to 0")
-    @Max(value=12, message = "must be less than or equal to 12")
+    @Size(min=1,message = "must be greater than 6")
+    @Size(max=12,message = "must be less than or equal to 12")
     private String phone;
 
 
