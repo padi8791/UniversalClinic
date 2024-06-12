@@ -8,11 +8,15 @@ import com.clinic.clinic.Entity.User;
 import com.clinic.clinic.Service.AppointmentService;
 import com.clinic.clinic.Service.DoctorService;
 import com.clinic.clinic.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +40,12 @@ public class DoctorController {
         this.appointmentService = appointmentService;
     }
 
+    @InitBinder //for editing
+    public void initBinder(WebDataBinder binder){
+        StringTrimmerEditor trimmer = new StringTrimmerEditor(true);
+        binder.registerCustomEditor(String.class, trimmer);
+    }
+
     @GetMapping
     public String index(Model model){
         return "redirect:/doctors/all";
@@ -55,15 +65,20 @@ public class DoctorController {
     }
 
     @PostMapping("/add")
-    public String addDoctor(@ModelAttribute Doctor doctor) {
+    public String addDoctor(@Valid @ModelAttribute Doctor doctor, BindingResult bindingResult) {
         User userAuthed = authUtils.getLoggedInUser();
         if (userAuthed == null) {
             return "redirect:/login";
         }
-        doctorService.save(doctor);
-        userAuthed.addDoctor(doctor);
-        userService.save(userAuthed);
-        return "redirect:/doctors";
+        if(bindingResult.hasErrors()){
+            return  "add-doctor-form";
+        }
+            doctorService.save(doctor);
+            userAuthed.addDoctor(doctor);
+            userService.save(userAuthed);
+            return "redirect:/doctors";
+            // return "redirect:/doctors";
+
     }
 
     @GetMapping("/all")
