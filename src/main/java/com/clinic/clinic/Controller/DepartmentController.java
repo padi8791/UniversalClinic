@@ -3,13 +3,17 @@ package com.clinic.clinic.Controller;
 import com.clinic.clinic.AuthUtils;
 import com.clinic.clinic.Entity.*;
 import com.clinic.clinic.Service.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,6 +36,12 @@ public class DepartmentController {
         this.userService = userService;
     }
 
+    @InitBinder //for editing
+    public void initBinder(WebDataBinder binder){
+        StringTrimmerEditor trimmer = new StringTrimmerEditor(true);
+        binder.registerCustomEditor(String.class, trimmer);
+    }
+
     @GetMapping
     public String index(Model model){
         return "redirect:/departments/all";
@@ -51,10 +61,13 @@ public class DepartmentController {
     }
 
     @PostMapping("/add")
-    public String addDepartment(@ModelAttribute Department department) {
+    public String addDepartment(@Valid @ModelAttribute Department department, BindingResult bindingResult) {
         User userAuthed = authUtils.getLoggedInUser();
         if (userAuthed == null) {
             return "redirect:/login";
+        }
+        if(bindingResult.hasErrors()){
+            return  "add-department-form";
         }
         department.setUser(userAuthed);
         departmentService.save(department);

@@ -73,11 +73,11 @@ public class DoctorController {
         if(bindingResult.hasErrors()){
             return  "add-doctor-form";
         }
-            doctorService.save(doctor);
-            userAuthed.addDoctor(doctor);
-            userService.save(userAuthed);
-            return "redirect:/doctors";
-            // return "redirect:/doctors";
+        doctorService.save(doctor);
+        userAuthed.addDoctor(doctor);
+        userService.save(userAuthed);
+        return "redirect:/doctors";
+
 
     }
 

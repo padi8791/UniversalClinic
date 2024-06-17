@@ -2,6 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
 <head>
     <title>Add Department</title>
+    <style>
+        .error{color:red}
+    </style>
 </head>
 <body>
 <div layout:fragment="content" class="wrapper">
@@ -15,6 +18,9 @@
                     <div class="input-block local-forms search-wrap">
                         <label>Name of department</label>
                         <input th:field="*{departmentName}" type="text" placeholder="Name of department">
+                        <span th:if="${#fields.hasErrors('departmentName')}"
+                              th:errors="*{departmentName}"
+                              class="error"></span>
                     </div>
                 </div>
 

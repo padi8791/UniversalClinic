@@ -2,6 +2,8 @@ package com.clinic.clinic.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "departments")
@@ -11,6 +13,8 @@ public class Department {
     private Long id;
 
     @Column(name = "departmentName")
+    @NotNull(message = "is required")
+    @Size(min=1,message = "is required")
     private String departmentName;
 
     @ManyToOne
