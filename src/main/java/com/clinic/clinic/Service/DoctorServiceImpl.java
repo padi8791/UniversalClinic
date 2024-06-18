@@ -59,4 +59,8 @@ public class DoctorServiceImpl implements DoctorService {
         Pageable pageable = PageRequest.of(page, size);
         return doctorPaginatedRepo.findByUser(user, pageable);
     }
+
+    public List<Doctor> findByLastNameAndUser(String lastName, User user) {
+        return doctorRepository.findByLastNameAndUser(lastName, user);
+    }
 }

@@ -137,11 +137,13 @@ public class PatientController {
 
 
     @GetMapping("/by-lastname/{lastName}")
-    public ResponseEntity<List<Patient>> getPatientByLastName(@PathVariable String lastName) {
-        List<Patient> doctors = patientService.findByLastName(lastName);
-        if (doctors.isEmpty()) {
+    public ResponseEntity<List<Patient>> getDoctorsByLastName(@PathVariable String lastName) {
+        User userAuthed = authUtils.getLoggedInUser();
+
+        List<Patient> patients = patientService.findByLastNameAndUser(lastName, userAuthed);
+        if (patients.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(doctors);
+        return ResponseEntity.ok(patients);
     }
 }

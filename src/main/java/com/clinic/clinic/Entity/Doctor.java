@@ -1,5 +1,7 @@
 package com.clinic.clinic.Entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -8,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "doctors")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Doctor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +34,7 @@ public class Doctor {
     private String email;
 
     @Column(name = "phone")
-    @Size(min=1,message = "must be greater than 6")
+    @Size(min=6,message = "must be greater than 6")
     @Size(max=12,message = "must be less than or equal to 12")
     private String phone;
 
@@ -44,6 +47,7 @@ public class Doctor {
     private User user;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<Appointment> appointments = new ArrayList<>();
 
     public Doctor() {

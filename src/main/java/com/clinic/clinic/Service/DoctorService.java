@@ -17,4 +17,6 @@ public interface DoctorService {
     List<Doctor> findByLastName(String lastName);
 
     Page<Doctor> getDoctorsByUserPaginated(User user, int page, int size);
+
+    List<Doctor> findByLastNameAndUser(String lastName, User userAuthed);
 }

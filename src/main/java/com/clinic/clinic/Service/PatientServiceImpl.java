@@ -62,4 +62,8 @@ public class PatientServiceImpl implements PatientService{
         Pageable pageable = PageRequest.of(page, size);
         return  patientPaginatedRepo.findByUser(user, pageable);
     }
+
+    public List<Patient> findByLastNameAndUser(String lastName, User user) {
+        return patientPaginatedRepo.findByLastNameAndUser(lastName, user);
+    }
 }

@@ -18,4 +18,6 @@ public interface PatientService {
     List<Patient> findByLastName(String lastName);
 
     Page<Patient> getPatientByUserPaginated(User user, int page, int size);
+
+    List<Patient> findByLastNameAndUser(String lastName, User userAuthed);
 }

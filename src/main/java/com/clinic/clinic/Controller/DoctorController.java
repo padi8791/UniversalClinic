@@ -162,7 +162,7 @@ public class DoctorController {
     public ResponseEntity<List<Doctor>> getDoctorsByLastName(@PathVariable String lastName) {
         User userAuthed = authUtils.getLoggedInUser();
 
-        List<Doctor> doctors = doctorService.findByLastName(lastName);
+        List<Doctor> doctors = doctorService.findByLastNameAndUser(lastName, userAuthed);
         if (doctors.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
