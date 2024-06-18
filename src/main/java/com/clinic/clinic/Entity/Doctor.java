@@ -1,7 +1,7 @@
 package com.clinic.clinic.Entity;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,16 +14,27 @@ public class Doctor {
     private Long id;
 
     @Column(name = "firstName")
+    @NotNull(message = "is required")
+    @Size(min=1,message = "is required")
     private String firstName;
 
+
     @Column(name = "lastName")
+    @NotNull(message = "is required")
+    @Size(min=1,message = "is required")
     private String lastName;
 
+
     @Column(name = "email")
+    @NotBlank(message = "Email is mandatory")
+    @Email(message = "Email should be valid")
     private String email;
 
     @Column(name = "phone")
+    @Size(min=1,message = "must be greater than 6")
+    @Size(max=12,message = "must be less than or equal to 12")
     private String phone;
+
 
     @Column(name = "department")
     private String department;

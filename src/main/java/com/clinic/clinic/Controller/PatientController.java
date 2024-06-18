@@ -6,12 +6,15 @@ import com.clinic.clinic.Entity.Patient;
 import com.clinic.clinic.Entity.User;
 import com.clinic.clinic.Service.PatientService;
 import com.clinic.clinic.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +37,11 @@ public class PatientController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(false);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+
+        StringTrimmerEditor trimmer = new StringTrimmerEditor(true);
+        binder.registerCustomEditor(String.class, trimmer);
     }
+
 
     @Autowired
     public PatientController(PatientService patientService, UserService userService) {
@@ -56,10 +63,13 @@ public class PatientController {
     }
 
     @PostMapping("/add")
-    public String addPatient(@ModelAttribute Patient patient) {
+    public String addPatient(@Valid @ModelAttribute Patient patient, BindingResult bindingResult) {
         User userAuthed = authUtils.getLoggedInUser();
         if (userAuthed == null) {
             return "redirect:/login";
+        }
+        if(bindingResult.hasErrors()){
+            return  "add-patient-form";
         }
         patientService.save(patient);
         userAuthed.addPatient(patient);
