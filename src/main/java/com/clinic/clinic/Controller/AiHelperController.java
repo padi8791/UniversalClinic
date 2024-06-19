@@ -12,15 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 @Controller
 @RequestMapping("/ai-helper")
-@CrossOrigin
 public class AiHelperController {
-
-    @Value("${openai.api.key}")
-    private String openaiApiKey;
 
     @GetMapping
     public String getAllDoctorsByUser(Model model) {
@@ -28,46 +27,4 @@ public class AiHelperController {
         return "ai-helper";
     }
 
-    @PostMapping("/chat")
-    @ResponseBody
-    public String getChatResponse(@RequestBody String userMessage) {
-        String apiUrl = "https://api.openai.com/v1/engines/davinci-codex/completions"; // Correct endpoint
-
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            HttpPost request = new HttpPost(apiUrl);
-            request.setHeader("Content-Type", "application/json");
-            request.setHeader("Authorization", "Bearer " + openaiApiKey);
-
-            JSONObject json = new JSONObject();
-            json.put("prompt", userMessage);
-            json.put("max_tokens", 150);
-
-            StringEntity entity = new StringEntity(json.toString());
-            request.setEntity(entity);
-
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
-                int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode != 200) {
-                    return "Error: OpenAI API request failed with status code " + statusCode;
-                }
-
-                String responseBody = EntityUtils.toString(response.getEntity());
-
-                if (responseBody.isEmpty()) {
-                    return "Error: Empty response from OpenAI API";
-                }
-
-                JSONObject responseJson = new JSONObject(responseBody);
-                if (responseJson.has("choices") && responseJson.getJSONArray("choices").length() > 0) {
-                    return responseJson.getJSONArray("choices").getJSONObject(0).getString("text").trim();
-                } else {
-                    return "Error: Unexpected response structure from OpenAI API";
-                }
-            }
-        } catch (IOException e) {
-            return "Error: Unable to get response from OpenAI API due to IOException";
-        } catch (Exception e) {
-            return "Error: An unexpected error occurred";
-        }
-    }
 }
