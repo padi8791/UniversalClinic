@@ -55,7 +55,8 @@ public class AppointmentController {
 
     @GetMapping("/add")
     public String showAddDoctorForm(Model model) {
-
+        User userAuthed = authUtils.getLoggedInUser();
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("userId", '1');
         model.addAttribute("title", "Add Appointment");
         return "add-appointment-form";
@@ -92,6 +93,7 @@ public class AppointmentController {
         Page<Appointment> appointmentsPage = appointmentService.getAppointmentByUserPaginated(userAuthed, page, 5);
         model.addAttribute("appointmentsPage", appointmentsPage);
         model.addAttribute("currentPage", page);
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("title", "Appointments");
         return "appointments";
     }
@@ -107,6 +109,7 @@ public class AppointmentController {
             return "redirect:/error";
         }
         model.addAttribute("appointment", appointment);
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("title", "Update Appointment");
         return "update-appointment-form"; // Name of the Thymeleaf template
     }
@@ -121,6 +124,7 @@ public class AppointmentController {
         if (appointment == null) {
             return "redirect:/error";
         }
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("appointment", appointment);
         return "appointment";
     }

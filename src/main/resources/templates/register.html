@@ -97,26 +97,87 @@
 <div class="login-wrap">
     <h1>Register</h1>
 
-    <form th:action="@{/register}" th:object="${user}" method="post" class="form-login">
-
+    <form id="register-form" class="form-login" onsubmit="registerUser(event)">
         <div class="input-block local-forms">
             <label>Username</label>
-            <input type="text" th:field="*{username}" placeholder="Username"/>
+            <input type="text" id="userName" name="userName" placeholder="Username"/>
+            <div id="username-error" class="error-message"></div>
         </div>
         <div class="input-block local-forms">
             <label>Password</label>
-            <input type="password" th:field="*{password}" placeholder="Password"/>
+            <input type="password" id="pass" name="pass" placeholder="Password"/>
+            <div id="password-error" class="error-message"></div>
+        </div>
+        <div class="input-block local-forms">
+            <label>Repeat Password</label>
+            <input type="password" id="repeatPass" name="repeatPass" placeholder="Repeat Password"/>
+            <div id="repeat-password-error" class="error-message"></div>
         </div>
         <div>
             <button type="submit" class="btn-add">Register</button>
         </div>
         <div class="footer-login-form">
-            <a href="/login">
-                login
-            </a>
+            <a href="/login">login</a>
         </div>
     </form>
-</div>
+
+    <script>
+        async function registerUser(event) {
+            event.preventDefault();
+
+            // Clear previous error messages
+            document.getElementById('username-error').textContent = '';
+            document.getElementById('password-error').textContent = '';
+            document.getElementById('repeat-password-error').textContent = '';
+
+            const userName = document.getElementById('userName').value;
+            const pass = document.getElementById('pass').value;
+            const repeatPass = document.getElementById('repeatPass').value;
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userName: userName,
+                        pass: pass,
+                        repeatPass: repeatPass
+                    })
+                });
+
+                console.log('Fetch response:', response); // Log the raw response
+
+                // Check if response is not ok
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+
+                // Extract JSON data from the response
+                const result = await response.json();
+                console.log('Parsed JSON result:', result); // Log the parsed JSON result
+
+                if (result.status === 'success') {
+                    window.location.href = '/login';
+                } else {
+                    // Handle errors
+                    if (result.errors && result.errors.username) {
+                        document.getElementById('username-error').textContent = result.errors.username.message;
+                    }
+                    if (result.errors && result.errors.password) {
+                        document.getElementById('password-error').textContent = result.errors.password.message;
+                    }
+                    if (result.errors && result.errors.repeatPass) {
+                        document.getElementById('repeat-password-error').textContent = result.errors.repeatPass.message;
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
+
 
 </body>
 </html>

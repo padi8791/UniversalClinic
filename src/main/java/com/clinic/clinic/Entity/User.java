@@ -2,6 +2,8 @@ package com.clinic.clinic.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +16,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "username")
+    @NotNull(message = "is required")
+    @Size(min=5,message = "min 5 chars")
     private String username;
     @Column(name = "password")
+    @NotNull(message = "is required")
+    @Size(min=8,message = "min 8 chars")
     private String password;
 
     @OneToMany

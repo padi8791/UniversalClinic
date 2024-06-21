@@ -50,6 +50,7 @@ public class CalendarController {
         List<Appointment> appointments = appointmentService.findByUser(userAuthed);
         List<AppointmentDTO> appointmentDTOs = convertToDTO(appointments);
 
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("appointments", appointmentDTOs);
         model.addAttribute("title", "Calendar");
         return "calendar";

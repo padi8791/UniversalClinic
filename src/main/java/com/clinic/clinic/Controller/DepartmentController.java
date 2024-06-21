@@ -56,6 +56,7 @@ public class DepartmentController {
         }
         Department department = new Department();
         model.addAttribute("department", department);
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("title", "Add Department");
         return "add-department-form";
     }
@@ -85,6 +86,7 @@ public class DepartmentController {
         Page<Department> departmentsPage = departmentService.getDepartmentByUserPaginated(userAuthed, page, 5);
         model.addAttribute("departmentsPage", departmentsPage);
         model.addAttribute("currentPage", page);
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("title", "Departments");
         return "departments";
     }
@@ -99,6 +101,8 @@ public class DepartmentController {
         if (department == null) {
             return "redirect:/error";
         }
+
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("department", department);
         model.addAttribute("title", "Update Department");
         return "update-department-form"; // Name of the Thymeleaf template
@@ -114,6 +118,7 @@ public class DepartmentController {
         if (department == null) {
             return "redirect:/error";
         }
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("department", department);
         return "department";
     }

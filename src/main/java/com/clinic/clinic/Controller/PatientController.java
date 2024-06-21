@@ -56,9 +56,11 @@ public class PatientController {
 
     @GetMapping("/add")
     public String showAddDoctorForm(Model model) {
+        User userAuthed = authUtils.getLoggedInUser();
         model.addAttribute("userId", '1');
         model.addAttribute("patient", new Patient());
         model.addAttribute("title", "Add Patient");
+        model.addAttribute("username", userAuthed.getUsername());
         return "add-patient-form";
     }
 
@@ -88,16 +90,19 @@ public class PatientController {
         Page<Patient> patientsPage = patientService.getPatientByUserPaginated(userAuthed, page, 5);
         model.addAttribute("patientsPage", patientsPage);
         model.addAttribute("currentPage", page);
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("title", "Patients");
         return "patients";
     }
 
     @GetMapping("/{patientId}/update")
     public String showUpdatePatientForm(@PathVariable Long patientId, Model model) {
+        User userAuthed = authUtils.getLoggedInUser();
         Patient patient = patientService.findById(patientId);
         if (patient == null) {
             return "redirect:/error"; // Redirect to an error page or another appropriate action
         }
+        model.addAttribute("username", userAuthed.getUsername());
         model.addAttribute("patient", patient);
         model.addAttribute("title", "Update Patient");
         return "update-patient-form"; // Name of the Thymeleaf template
