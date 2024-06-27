@@ -25,16 +25,33 @@
             <script>
                 async function sendMessage() {
                     const userInput = document.getElementById("userInput").value;
-                    const response = await fetch('/ai-helper/chat', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(userInput)
-                    });
-                    const data = await response.text();
-                    document.getElementById("responseText").innerText = data;
-                }
+                    let  apiUrl = "http://localhost:8080/AI-Assistant?prompt=".concat(userInput);
+
+                        let response = await fetch(apiUrl);
+                        let responseText = await getTextFromStream(response.body);
+
+                        document.getElementById("responseText").innerText  = responseText;
+                    }
+
+                    async function getTextFromStream(readableStream) {
+                        let reader = readableStream.getReader();
+                        let utf8Decoder = new TextDecoder();
+                        let nextChunk;
+
+                        let resultStr = '';
+
+                        while (!(nextChunk = await reader.read()).done) {
+                            let partialData = nextChunk.value;
+                            resultStr += utf8Decoder.decode(partialData);
+                        }
+
+                        return resultStr;
+                    }
+
+                    (async() => {
+                        await fetchTest();
+                    })();
+
             </script>
 
 
